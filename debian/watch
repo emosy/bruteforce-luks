@@ -1,0 +1,3 @@
+version=3
+opts="pgpsigurlmangle=s/$/.sig/" \
+https://github.com/glv2/bruteforce-luks/releases .*/-?(\d\S+)\.tar\.(?:bz2|gz|xz)

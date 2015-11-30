@@ -1,0 +1,5 @@
+bruteforce-luks (1.1.1-1) unstable; urgency=medium
+
+  * Initial release (Closes: #804301)
+
+ -- Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>  Mon, 30 Nov 2015 13:03:00 -0200
