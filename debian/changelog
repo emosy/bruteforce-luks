@@ -1,3 +1,10 @@
+bruteforce-luks (1.1.1-2) unstable; urgency=medium
+
+  * debian/control: Restrict building to linux-any, since libcryptsetup-dev
+    is not available in non-linux platforms.
+
+ -- Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>  Thu, 10 Dec 2015 19:24:00 -0200
+
 bruteforce-luks (1.1.1-1) unstable; urgency=medium
 
   * Initial release (Closes: #804301)

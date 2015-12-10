@@ -9,7 +9,7 @@ Standards-Version: 3.9.6
 Homepage: https://github.com/glv2/bruteforce-luks
 
 Package: bruteforce-luks
-Architecture: any
+Architecture: linux-any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Try to find a password of a LUKS encrypted volume
  The program is used to try discovery a password for encrypted LUKS volume used
