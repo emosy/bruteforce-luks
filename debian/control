@@ -5,7 +5,7 @@ Maintainer: Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>
 Build-Depends: debhelper (>= 9),
                dh-autoreconf,
                libcryptsetup-dev
-Standards-Version: 3.9.6
+Standards-Version: 3.9.7
 Homepage: https://github.com/glv2/bruteforce-luks
 
 Package: bruteforce-luks

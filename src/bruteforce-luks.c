@@ -1,7 +1,7 @@
 /*
 Bruteforce a LUKS volume.
 
-Copyright 2014-2015 Guillaume LE VAILLANT
+Copyright 2014-2016 Guillaume LE VAILLANT
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -84,7 +84,7 @@ void * decryption_func_bruteforce(void *arg)
 {
   struct decryption_func_locals *dfargs;
   wchar_t *password;
-  unsigned char *pwd, device_name[64];
+  unsigned char *pwd;
   unsigned int password_len, pwd_len, index_start, index_end, len, i, j, k;
   int ret;
   unsigned int *tab;
@@ -93,7 +93,10 @@ void * decryption_func_bruteforce(void *arg)
   dfargs = (struct decryption_func_locals *) arg;
   index_start = dfargs->index_start;
   index_end = dfargs->index_end;
-  snprintf(device_name, sizeof(device_name), "luks_%u", index_start);
+
+  /* Load the LUKS volume header */
+  crypt_init(&cd, path);
+  crypt_load(cd, CRYPT_LUKS1, NULL);
 
   /* For every possible length */
   for(len = min_len - prefix_len - 1 - suffix_len; len + 1 <= max_len - prefix_len - suffix_len; len++)
@@ -132,20 +135,15 @@ void * decryption_func_bruteforce(void *arg)
               wcstombs(pwd, password, pwd_len + 1);
 
               /* Decrypt the LUKS volume with the password */
-              crypt_init(&cd, path);
-              crypt_load(cd, CRYPT_LUKS1, NULL);
-              ret = crypt_activate_by_passphrase(cd, device_name, CRYPT_ANY_SLOT, pwd, pwd_len, CRYPT_ACTIVATE_READONLY);
+              ret = crypt_activate_by_passphrase(cd, NULL, CRYPT_ANY_SLOT, pwd, pwd_len, CRYPT_ACTIVATE_READONLY);
               dfargs->counter++;
-              /* Note: If the password works but the LUKS volume is already mounted,
-                 the crypt_activate_by_passphrase function should return -EBUSY. */
-              if((ret >= 0) || (ret == -EBUSY))
+              if(ret >= 0)
                 {
                   /* We have a positive result */
                   handle_signal(SIGUSR1); /* Print some stats */
                   pthread_mutex_lock(&found_password_lock);
                   found_password = 1;
                   printf("Password found: %ls\n", password);
-                  crypt_deactivate(cd, device_name);
                   stop = 1;
                   pthread_mutex_unlock(&found_password_lock);
                 }
@@ -154,7 +152,6 @@ void * decryption_func_bruteforce(void *arg)
                   fprintf(stderr, "Error: access to the LUKS volume denied.\n\n");
                   stop = 1;
                 }
-              crypt_free(cd);
 
               free(pwd);
 
@@ -176,6 +173,8 @@ void * decryption_func_bruteforce(void *arg)
           free(password);
         }
     }
+
+  crypt_free(cd);
 
   pthread_exit(NULL);
 }
@@ -243,13 +242,16 @@ int read_dictionary_line(unsigned char **line, unsigned int *n)
 void * decryption_func_dictionary(void *arg)
 {
   struct decryption_func_locals *dfargs;
-  unsigned char *pwd, device_name[64];
+  unsigned char *pwd;
   unsigned int pwd_len;
   int ret;
   struct crypt_device *cd;
 
   dfargs = (struct decryption_func_locals *) arg;
-  snprintf(device_name, sizeof(device_name), "luks_%u", dfargs->index_start);
+
+  /* Load the LUKS volume header */
+  crypt_init(&cd, path);
+  crypt_load(cd, CRYPT_LUKS1, NULL);
 
   do
     {
@@ -258,20 +260,15 @@ void * decryption_func_dictionary(void *arg)
         break;
 
       /* Decrypt the LUKS volume with the password */
-      crypt_init(&cd, path);
-      crypt_load(cd, CRYPT_LUKS1, NULL);
-      ret = crypt_activate_by_passphrase(cd, device_name, CRYPT_ANY_SLOT, pwd, pwd_len, CRYPT_ACTIVATE_READONLY);
+      ret = crypt_activate_by_passphrase(cd, NULL, CRYPT_ANY_SLOT, pwd, pwd_len, CRYPT_ACTIVATE_READONLY);
       dfargs->counter++;
-      /* Note: If the password works but the LUKS volume is already mounted,
-         the crypt_activate_by_passphrase function should return -EBUSY. */
-      if((ret >= 0) || (ret == -EBUSY))
+      if(ret >= 0)
         {
           /* We have a positive result */
           handle_signal(SIGUSR1); /* Print some stats */
           pthread_mutex_lock(&found_password_lock);
           found_password = 1;
           printf("Password found: %s\n", pwd);
-          crypt_deactivate(cd, device_name);
           stop = 1;
           pthread_mutex_unlock(&found_password_lock);
         }
@@ -280,11 +277,12 @@ void * decryption_func_dictionary(void *arg)
           fprintf(stderr, "Error: access to the LUKS volume denied.\n\n");
           stop = 1;
         }
-      crypt_free(cd);
 
       free(pwd);
     }
   while(stop == 0);
+
+  crypt_free(cd);
 
   pthread_exit(NULL);
 }
@@ -532,7 +530,7 @@ int main(int argc, char **argv)
   ret = check_path(path);
   if(ret == 0)
     {
-      fprintf(stderr, "Error: %s is not a valid LUKS volume.\n\n", path);
+      fprintf(stderr, "Error: either %s is not a valid LUKS volume, or you don't have permission to access it.\n\n", path);
       exit(EXIT_FAILURE);
     }
 

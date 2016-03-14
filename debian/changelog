@@ -1,3 +1,13 @@
+bruteforce-luks (1.2.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian/control:
+      - Bumped Standards-Version to 3.9.7.
+  * debian/watch:
+      - Updated to add gpg signature option to watch file.
+
+ -- Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>  Mon, 14 Mar 2016 12:49:00 -0300
+
 bruteforce-luks (1.1.1-2) unstable; urgency=medium
 
   * debian/control: Restrict building to linux-any, since libcryptsetup-dev
