@@ -1,3 +1,11 @@
+bruteforce-luks (1.2.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control:
+      - Bumped Standards-Version to 3.9.8.
+
+ -- Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>  Sun, 12 Jun 2016 12:58:00 -0300
+
 bruteforce-luks (1.2.0-1) unstable; urgency=medium
 
   * New upstream release.
