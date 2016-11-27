@@ -26,11 +26,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <unistd.h>
 #include <wchar.h>
 
 #include "version.h"
 
+
+#define LAST_PASS_MAX_SHOWN_LENGTH 256
 
 unsigned char *default_charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 unsigned char *path = NULL;
@@ -40,6 +43,8 @@ FILE *dictionary = NULL;
 pthread_mutex_t found_password_lock, dictionary_lock;
 char stop = 0, found_password = 0;
 unsigned int nb_threads = 1;
+unsigned char last_pass[LAST_PASS_MAX_SHOWN_LENGTH];
+time_t start_time;
 struct decryption_func_locals
 {
   unsigned int index_start;
@@ -59,6 +64,9 @@ void handle_signal(int signo)
   unsigned int l_full = max_len - suffix_len - prefix_len;
   unsigned int l_skip = min_len - suffix_len - prefix_len;
   double space = 0;
+  time_t current_time;
+
+  current_time = time(NULL);
 
   if(dictionary == NULL)
     for(l = l_skip; l <= l_full; l++)
@@ -68,6 +76,8 @@ void handle_signal(int signo)
     total_ops += thread_locals[i].counter;
 
   fprintf(stderr, "Tried passwords: %llu\n", total_ops);
+  fprintf(stderr, "Tried passwords per second: %lf\n", (double) total_ops / (current_time - start_time));
+  fprintf(stderr, "Last tried password: %s\n", last_pass);
   if(dictionary == NULL)
     fprintf(stderr, "Total space searched: %lf%%\n", (total_ops / space) * 100);
 }
@@ -133,6 +143,7 @@ void * decryption_func_bruteforce(void *arg)
                   exit(EXIT_FAILURE);
                 }
               wcstombs(pwd, password, pwd_len + 1);
+              snprintf(last_pass, LAST_PASS_MAX_SHOWN_LENGTH, "%s", pwd);
 
               /* Decrypt the LUKS volume with the password */
               ret = crypt_activate_by_passphrase(cd, NULL, CRYPT_ANY_SLOT, pwd, pwd_len, CRYPT_ACTIVATE_READONLY);
@@ -259,6 +270,7 @@ void * decryption_func_dictionary(void *arg)
       ret = read_dictionary_line(&pwd, &pwd_len);
       if(ret == 0)
         break;
+      snprintf(last_pass, LAST_PASS_MAX_SHOWN_LENGTH, "%s", pwd);
 
       /* Decrypt the LUKS volume with the password */
       ret = crypt_activate_by_passphrase(cd, NULL, CRYPT_ANY_SLOT, pwd, pwd_len, CRYPT_ACTIVATE_READONLY);
@@ -525,6 +537,7 @@ int main(int argc, char **argv)
         }
     }
 
+  last_pass[0] = '\0';
   signal(SIGUSR1, handle_signal);
 
   /* Check if path points to a LUKS volume */
@@ -546,6 +559,7 @@ int main(int argc, char **argv)
       fprintf(stderr, "Error: memory allocation failed.\n\n");
       exit(EXIT_FAILURE);
     }
+  start_time = time(NULL);
   for(i = 0; i < nb_threads; i++)
     {
       if(dictionary == NULL)

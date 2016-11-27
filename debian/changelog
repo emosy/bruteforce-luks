@@ -1,3 +1,9 @@
+bruteforce-luks (1.2.2-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>  Sun, 27 Nov 2016 11:50:00 -0200
+
 bruteforce-luks (1.2.1-1) unstable; urgency=medium
 
   * New upstream release
