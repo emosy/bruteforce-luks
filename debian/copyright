@@ -3,15 +3,15 @@ Upstream-Name: bruteforce-luks
 Source: https://github.com/glv2/bruteforce-luks
 
 Files: *
-Copyright: 2014-2015 Guillaume LE VAILLANT <guillaume.le.vaillant@openmailbox.org>
+Copyright: 2014-2017 Guillaume LE VAILLANT <guillaume.le.vaillant@openmailbox.org>
 License: GPL-3+
 
 Files: contrib/gentoo/app-crypt/bruteforce-luks/*
-Copyright: 2014-2015 Guillaume LE VAILLANT <guillaume.le.vaillant@openmailbox.org>
+Copyright: 2014-2017 Guillaume LE VAILLANT <guillaume.le.vaillant@openmailbox.org>
 License: GPL-3
 
 Files: debian/*
-Copyright: 2015 Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>
+Copyright: 2015 -2018 Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>
 License: GPL-3+
 
 License: GPL-3 or GPL-3+
