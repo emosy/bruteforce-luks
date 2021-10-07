@@ -14,6 +14,7 @@ bruteforce-luks (1.4.0-1) unstable; urgency=medium
       - Updated packaging copyright years.
       - Fixed missing-license-paragraph.
   * Add Upstream Metadata file.
+  * debian/watch: updated the debian/watch file.
 
  -- Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>  Thu, 07 Oct 2021 09:16:00 -0300
 
