@@ -52,6 +52,10 @@ the commands:
     sudo apt install dh-autoreconf
     sudo apt install libcryptsetup-dev
 
+For Fedora, enter the commands:
+
+    sudo dnf install dh-autoreconf
+    sudo dnf install cryptsetup-devel
 
 If you are building from the raw sources, you must first generate the
 configuration script:
@@ -118,12 +122,3 @@ Save/restore state between sessions:
     bruteforce-luks -t 6 -f dictionary.txt -w state.txt /dev/sdd1
       (Let the program run for a few minutes and stop it)
     bruteforce-luks -t 6 -w state.txt /dev/sdd1
-
-
-## Donations
-
-If you find this program useful and want to make a donation, you can send coins
-to one of the following addresses:
-
- - Peercoin: PWFNV1Cvq7nQBRyRueuYzwmDNXUGpgNkBC
- - Bitcoin: 1F1ZfM7XtggHsShK4vwuy9zv98a9wt7nXx
