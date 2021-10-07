@@ -1,7 +1,7 @@
 /*
 Bruteforce a LUKS volume.
 
-Copyright 2014-2017 Guillaume LE VAILLANT
+Copyright 2014-2019 Guillaume LE VAILLANT
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,6 +33,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "version.h"
 
+
+#ifndef CRYPT_LUKS
+/* Passing NULL to crypt_load will default to LUKS1 on older libcryptsetup versions. */
+#define CRYPT_LUKS NULL
+#endif
 
 #define LAST_PASS_MAX_SHOWN_LENGTH 256
 
@@ -69,6 +74,7 @@ void handle_signal(int signo)
   double space = 0;
   double pw_per_seconds;
   time_t current_time, eta_time;
+  struct tm *time_info;
   char datestr[256];
 
   current_time = time(NULL);
@@ -101,8 +107,11 @@ void handle_signal(int signo)
     }
     else
     {
-      strftime(datestr, 256, "%c", localtime(&eta_time));
-      fprintf(stderr, "ETA: %s\n", datestr);
+      time_info = localtime(&eta_time);
+      if(time_info && (strftime(datestr, 256, "%c", time_info) > 0))
+        fprintf(stderr, "ETA: %s\n", datestr);
+      else
+        fprintf(stderr, "ETA: %ld s\n", eta_time - start_time);
     }
   }
   fprintf(stderr, "\n");
@@ -278,7 +287,7 @@ void * decryption_func(void *arg)
 
   /* Load the LUKS volume header */
   crypt_init(&cd, path);
-  crypt_load(cd, CRYPT_LUKS1, NULL);
+  crypt_load(cd, CRYPT_LUKS, NULL);
   crypt_set_log_callback(cd, &logger, &ret);
 
   do
@@ -369,9 +378,11 @@ void restore_state()
 
   if(state == NULL)
   {
-    fprintf(stderr, "Warning: can't open state file, state not restored.\n\n");
+    fprintf(stderr, "Warning: can't open state file, state not restored, a new file will be created.\n\n");
     return;
   }
+
+  fprintf(stderr, "Warning: restoring state, ignoring options -b, -e, -f, -l, -m and -s.\n\n");
 
   if(dictionary != NULL)
     fclose(dictionary);
@@ -521,7 +532,7 @@ int check_path(char *path)
   if(ret < 0)
     return(0);
 
-  ret = crypt_load(cd, CRYPT_LUKS1, NULL);
+  ret = crypt_load(cd, CRYPT_LUKS, NULL);
   if(ret < 0)
   {
     crypt_free(cd);
@@ -789,8 +800,6 @@ int main(int argc, char **argv)
 
   if(state_file != NULL)
   {
-    fprintf(stderr, "Warning: restoring state, ignoring options -b, -e, -f, -l, -m and -s.\n\n");
-
     restore_state();
 
     signal(SIGVTALRM, save_state);
