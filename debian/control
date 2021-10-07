@@ -2,9 +2,9 @@ Source: bruteforce-luks
 Section: utils
 Priority: optional
 Maintainer: Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>
-Build-Depends: debhelper (>= 11),
+Build-Depends: debhelper-compat (= 13),
                libcryptsetup-dev
-Standards-Version: 4.1.3
+Standards-Version: 4.6.0.1
 Homepage: https://github.com/glv2/bruteforce-luks
 
 Package: bruteforce-luks

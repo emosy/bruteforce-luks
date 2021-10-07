@@ -2,6 +2,11 @@ bruteforce-luks (1.4.0-1) unstable; urgency=medium
 
   [ Paulo Roberto Alves de Oliveira ]
   * New upstream version 1.4.0
+  * Using new DH level format. Consequently:
+      - debian/compat: removed.
+      - debian/control: changed from 'debhelper' to 'debhelper-compat' in
+        Build-Depends field and bumped level to 13.
+  * debian/control: bumped Standards-Version to 4.6.0.1.
 
  -- Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>  Thu, 07 Oct 2021 09:16:00 -0300
 
