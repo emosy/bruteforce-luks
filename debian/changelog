@@ -9,6 +9,7 @@ bruteforce-luks (1.4.0-1) unstable; urgency=medium
   * debian/control:
       - Bumped Standards-Version to 4.6.0.1.
       - Included Vcs-* fields.
+      - Added 'Rules-Requires-Root: no' to source stanza.
 
  -- Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>  Thu, 07 Oct 2021 09:16:00 -0300
 
