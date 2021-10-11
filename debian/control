@@ -1,7 +1,8 @@
 Source: bruteforce-luks
 Section: utils
 Priority: optional
-Maintainer: Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>
+Maintainer: Debian Security Tools <team+pkg-security@tracker.debian.org>
+Uploaders: Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>
 Build-Depends: debhelper-compat (= 13),
                libcryptsetup-dev
 Standards-Version: 4.6.0.1
