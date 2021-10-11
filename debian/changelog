@@ -7,16 +7,19 @@ bruteforce-luks (1.4.0-1) unstable; urgency=medium
       - debian/control: changed from 'debhelper' to 'debhelper-compat' in
         Build-Depends field and bumped level to 13.
   * debian/control:
-      - Bumped Standards-Version to 4.6.0.1.
+      - Changed maintainer to pkg-security team.
+      - Added kretcheu as an uploader.
       - Included Vcs-* fields.
+      - Bumped Standards-Version to 4.6.0.1.
       - Added 'Rules-Requires-Root: no' to source stanza.
   * debian/copyright:
       - Updated packaging copyright years.
       - Fixed missing-license-paragraph.
-  * Add Upstream Metadata file.
   * debian/watch: updated the debian/watch file.
+  * Add Upstream Metadata file.
+  * Add debian/gbp.conf file.
 
- -- Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>  Thu, 07 Oct 2021 09:16:00 -0300
+ -- Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>  Wed, 05 Jan 2022 09:16:00 -0300
 
 bruteforce-luks (1.3.1-1) unstable; urgency=medium
 
