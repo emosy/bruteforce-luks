@@ -1,3 +1,9 @@
+bruteforce-luks (1.4.0-2) unstable; urgency=medium
+
+  * debian/watch: improve to get correct upstream version number.
+
+ -- Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>  Thu, 06 Jan 2022 00:34:00 -0300
+
 bruteforce-luks (1.4.0-1) unstable; urgency=medium
 
   [ Paulo Roberto Alves de Oliveira ]
