@@ -1,3 +1,11 @@
+bruteforce-luks (1.4.0-4) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Re-export upstream signing key without extra signatures.
+  * Drop unnecessary dependency on dh-autoreconf.
+
+ -- Paulo Roberto Alves de Oliveira (aka kretcheu) <kretcheu@gmail.com>  Sun, 23 Oct 2022 10:33:00 -0300
+
 bruteforce-luks (1.4.0-3) unstable; urgency=medium
 
   * debian/watch: fix url to https://github.com/glv2/bruteforce-luks/tags.
