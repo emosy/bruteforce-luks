@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <time.h>
 #include <unistd.h>
 #include <wchar.h>
+#include <openssl/sha.h>
 
 #include "version.h"
 
@@ -280,6 +281,7 @@ void * decryption_func(void *arg)
   struct decryption_func_locals *dfargs;
   unsigned char *pwd;
   unsigned int pwd_len;
+  unsigned char pwd_hashed[SHA_DIGEST_LENGTH];
   int ret;
   struct crypt_device *cd;
 
@@ -299,8 +301,10 @@ void * decryption_func(void *arg)
     if(ret == 0)
       break;
 
-    /* Decrypt the LUKS volume with the password */
-    ret = crypt_activate_by_passphrase(cd, NULL, CRYPT_ANY_SLOT, pwd, pwd_len, CRYPT_ACTIVATE_READONLY);
+    // calculate SHA1 of password
+    SHA1(pwd, pwd_len, pwd_hashed);
+    /* Decrypt the LUKS volume with the SHA1 of the password */
+    ret = crypt_activate_by_passphrase(cd, NULL, CRYPT_ANY_SLOT, pwd_hashed, SHA_DIGEST_LENGTH, CRYPT_ACTIVATE_READONLY);
     if(ret >= 0)
     {
       /* We have a positive result */
@@ -552,6 +556,8 @@ void usage(char *progname)
 {
   fprintf(stderr, "\nbruteforce-luks %s\n\n", VERSION_NUMBER);
   fprintf(stderr, "Usage: %s [options] <path to LUKS volume>\n\n", progname);
+  fprintf(stderr, "NOTE: This version has been modified to pass the password\n");
+  fprintf(stderr, "through SHA1 before using it to attempt to decrypt the volume.\n");
   fprintf(stderr, "Options:\n");
   fprintf(stderr, "  -b <string>  Beginning of the password.\n");
   fprintf(stderr, "                 default: \"\"\n");

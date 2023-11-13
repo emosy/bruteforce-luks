@@ -14,6 +14,8 @@ There is a command line option to specify the number of threads to use.
 Sending a USR1 signal to a running bruteforce-luks process makes it print
 progress and continue.
 
+This program has been modified from the base version to pass the generated
+password through SHA1 before attempting to decrypt the volume.
 
 ## Exhaustive mode
 
@@ -51,6 +53,7 @@ the commands:
 
     sudo apt install dh-autoreconf
     sudo apt install libcryptsetup-dev
+    sudo apt install libssl-dev
 
 For Fedora, enter the commands:
 
